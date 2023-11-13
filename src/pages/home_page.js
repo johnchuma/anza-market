@@ -79,18 +79,18 @@ const HomePage = () => {
     
     
      <SizedBox height={100}/>
-     <div>
+     {/* <div>
      <Carousel>
      <Carousel.Item>
-                <Image src="images/ads/SY Web 1920 – 7.png" fluid/>
+                <Image src="images/backgrounds/bg-large.jpg" fluid/>
 
                 </Carousel.Item>
                 <Carousel.Item >
-                  <Image src="images/ads/SY Web 1920 – 6.png" fluid/>
+                  <Image src="images/backgrounds/bg-large.jpg" fluid/>
                 </Carousel.Item>
                
               </Carousel>
-            </div>
+            </div> */}
      <SizedBox height={100}/>
      
      <Container>

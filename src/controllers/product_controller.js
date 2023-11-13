@@ -44,8 +44,8 @@ export const addProduct = async (data,imageFiles) => {
 
  export const getProducts = async()=>{
   try {
-    const user = getUser();
-   const response = await axios.get(`${server_url}/product/business/${user.Business.uuid}`)
+   
+   const response = await axios.get(`${server_url}/product`)
    console.log(response.data)
     return response.data.body
   } catch (error) {

@@ -97,7 +97,7 @@ const ShopPage = () => {
                                     <SmallText className={"ms-2"} text={" (2 reviews)"} />
                                     </Stack>
                                     
-                                  <Button className="border-0 mt-3" style={{ backgroundColor:primaryColor,fontSize:14 }} >Add to cart</Button>
+                                  {/* <Button className="border-0 mt-3" style={{ backgroundColor:primaryColor,fontSize:14 }} >Add to cart</Button> */}
                                 </Col>
                             </Row>
                         </div>

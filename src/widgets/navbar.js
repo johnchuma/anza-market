@@ -29,9 +29,12 @@ const NavigationBar = () => {
       <SmallText text={"TZS"}/>
        
       <SmallText text={"English"}/>
-      {user.role? <Heading2 onClick={()=>navigate("/apply-to-be-seller")} text={"Apply to be seller"} color={primaryColor} fontSize={14}/>:  <div className={"btn border-0 p-0"} onClick={()=>navigate("/login")}>
-    <SmallText   text={"Sign In/ Sign Up"}/>
-      </div>}
+      {user ?<Heading2 onClick={()=>navigate("/apply-to-be-seller")} text={"Apply to be seller"} color={primaryColor} fontSize={14}/>:
+      <div className={"btn border-0 p-0"} onClick={()=>navigate("/login")}>
+      <SmallText   text={"Sign In/ Sign Up"}/>
+        </div>
+      }
+     
      </Col>
     
   </Row>
