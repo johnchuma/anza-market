@@ -8,13 +8,13 @@ import * as yup from 'yup';
 
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 
-import Heading2 from '../../widgets/heading2';
-import CustomButton from '../../widgets/button';
-import { addProduct } from '../../controllers/product_controller';
-import Heading from '../../widgets/heading';
 import draftToHtml from 'draftjs-to-html';
 import { AiFillBackward, AiOutlineArrowLeft, AiOutlineFileImage } from 'react-icons/ai';
 import { useNavigate } from 'react-router-dom';
+import Heading2 from '../../../widgets/heading2';
+import CustomButton from '../../../widgets/button';
+import { addProduct } from '../../../controllers/product_controller';
+import Heading from '../../../widgets/heading';
 
 
 
@@ -86,7 +86,8 @@ const AddProduct = ({ show, onHide }) => {
             {({ handleSubmit, handleChange, values, touched, errors }) => (
               <Form noValidate onSubmit={handleSubmit}>
                  <Stack direction='horizontal' className='d-flex justify-content-between mb-3'>
-     <Stack direction='horizontal'><AiOutlineArrowLeft onClick={()=>navigate(-1)} className='me-3'/><Heading text={"New product"}/></Stack> 
+     <Stack direction='horizontal'><AiOutlineArrowLeft onClick={()=>navigate(-1)} className='me-3'/>
+     <Heading text={"New product"}/></Stack> 
          <CustomButton loading={loading} text={"Add product"}/>
         </Stack>
                 <Row>

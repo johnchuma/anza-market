@@ -1,68 +1,95 @@
-import { Col, Container, Form, Image, Row, Stack } from "react-bootstrap";
+import { Col, Container, Form, Image, Offcanvas, Row, Stack } from "react-bootstrap";
 
-import { AiFillContacts, AiFillDashboard, AiFillMedicineBox, AiFillPieChart, AiFillSetting, AiFillShop, AiOutlineSearch } from "react-icons/ai";
+import { AiFillCloseCircle, AiFillContacts, AiFillDashboard, AiFillMedicineBox, AiFillPieChart, AiFillProfile, AiFillSetting, AiFillShop, AiOutlineClose, AiOutlineMenu, AiOutlineSearch, AiOutlineUser } from "react-icons/ai";
 
 import { Outlet, useNavigate } from "react-router-dom";
 import Heading2 from "../widgets/heading2";
 import { FaBell, FaUser } from "react-icons/fa";
 import Paragraph from "../widgets/paragraph";
-import { primaryColor } from "../utils/colors";
+import { mutedBackground, mutedColor, primaryColor } from "../utils/colors";
+import { useContext, useEffect, useState } from "react";
+import SizedBox from "../widgets/sizedBox";
+import { BsForward, BsPeople, BsPeopleFill, BsPerson, BsPersonFill, BsPlusCircle, BsPlusCircleFill } from "react-icons/bs";
+import { logout } from "../utils/local_storage";
+import { UserContext } from "../contexts/user_context";
 
 const DashboardLayout = () => {
+    const [show, setShow] = useState(false);
+    const {user} = useContext(UserContext);
     const navigate = useNavigate()
     return ( <div style={{ backgroundColor:"#F9FBFD" }}>
-        <Container>
-            <br/>
-            <Row>
-                <Col md={3} >
-                 <div className="px-4" style={{ height:"90vh",backgroundColor:primaryColor,borderRadius:30,position:"fixed" }}>
+        <Offcanvas show={show} onClick={()=>setShow(false)} placement="start">
+            <Offcanvas.Body  style={{ backgroundColor:primaryColor,overflowY:"hidden" }}>
+            <div className="px-4" style={{ borderRadius:30}}>
                     <Container className="py-5 px-3">
-                    <div style={{ width:80 }}>
-                    <Image  src="/images/home/anza.png" fluid/>
-                    </div> 
-                    <Heading2 text={"Seller's dashboard"} color={"white"} className={"mb-5 mt-5"}/>
-                    {[{title:"Dashboard",onClick:()=>{navigate("/dashboard/")},icon:<AiFillDashboard size={23} color="white"/>},
-                    {title:"Products",onClick:()=>{navigate("/dashboard/products")},icon:<AiFillMedicineBox size={23} color="white"/>},
-                    {title:"Orders",onClick:()=>{navigate("/dashboard/orders")},icon:<AiFillShop size={23} color="white"/>},
-                    {title:"Categories",onClick:()=>{navigate("/dashboard/categories")},icon:<AiFillContacts size={23} color="white"/>},
-
-                    {title:"Reports",onClick:()=>{},icon:<AiFillPieChart size={23} color="white"/>}].map((item)=><div>
-                        <Stack onClick={item.onClick}  direction="horizontal" className="mb-3 btn border-0 p-0">
-                            {item.icon} <Heading2 color={"white"} className={"ms-2"} fontSize={16} text={item.title}/>
+                    <Stack className="d-flex justify-content-end" direction="horizontal">
+                    <div onClick={()=>{
+                        setShow(false)
+                    }} className="btn border-0 p-0">
+                      <AiOutlineClose style={{color:"#ffffff50" }} size={20}/>
+                    </div>
+                 </Stack>
+                    <div onClick={()=>navigate("/")} className="btn p-0" style={{ width:80 }}>
+                        <Image src="/images/home/anza.png" fluid/>
+                    </div>
+                    
+                    <Heading2 text={user.role=="admin"?"Admin dashboard":"Seller's dashboard"} color={"white"} className={"mb-5 mt-5"}/>
+                    {[  {title:"Dashboard",role:["seller","admin"], onClick:()=>{navigate("/dashboard/")},icon:<AiFillDashboard size={16} color={"#9ba3b4"}/>},
+                        {title:"Uploaded Products",role:["seller"], onClick:()=>{navigate("/dashboard/products")},icon:<AiFillMedicineBox size={16} color={"#9ba3b4"}/>},
+                        {title:"Customer orders",role:["seller"], onClick:()=>{navigate("/dashboard/orders")},icon:<AiFillShop size={16} color={"#9ba3b4"}/>},
+                        {title:"System users",role:["admin"], onClick:()=>{navigate("/dashboard/users")},icon:<BsPeopleFill size={16} color={"#9ba3b4"}/>},
+                        {title:"Marketplace sellers",role:["admin"], onClick:()=>{navigate("/dashboard/sellers")},icon:<AiFillContacts size={16} color={"#9ba3b4"}/>},
+                        {title:"Applications",role:["admin"], onClick:()=>{navigate("/dashboard/applications")},icon:<BsPlusCircleFill size={16} color={"#9ba3b4"}/>},
+                        {title:"Business sectors",role:["admin"], onClick:()=>{navigate("/dashboard/sectors")},icon:<AiFillPieChart size={16} color={"#9ba3b4"}/>}
+                    ].map((item)=> item.role.includes(user.role)&& <div>
+                        <Stack onClick={item.onClick} direction="horizontal" className="mb-3 btn border-0 p-0">
+                            {item.icon} <Paragraph color={"white"} className={"ms-2"} fontSize={17} text={item.title}/>
                         </Stack>
                     </div>)}
                     </Container>
-                   
                  </div>
-                </Col>
-                <Col md={9}>
+                 
+            </Offcanvas.Body>
+        </Offcanvas>
+        <Container>
+            <br/>
+            <Row >
+                <Col md={12}>
                     <br/>
                     <br/>
                     <Stack>
                         <Row>
                             <Col md={4}>
-                            <Stack style={{ backgroundColor:"white", }} className="p-1" direction="horizontal">
-                            <Form.Control placeholder="Search content here"></Form.Control>
-                            <div style={{ backgroundColor:"#00000010" }}><AiOutlineSearch size={20} className="m-2 rounded"/></div>
+                            <Stack style={{  }} className="p-1" direction="horizontal">
+                            <div className="btn border-0 p-0 me-3" onClick={()=>navigate("/")} style={{ width:170 }}>
+                             <Image  src="/images/home/Shule-Yetu-–-52.png" fluid/>
+                            </div>  
+                            <Form.Control style={{ borderTopLeftRadius:5,borderBottomLeftRadius:5,borderTopRightRadius:0,borderBottomRightRadius:0 }} placeholder="Search content here" className=" shadow-none"></Form.Control>
+                            <div style={{ borderTopRightRadius:5,borderBottomRightRadius:5, backgroundColor:"white",borderColor:"#00000020",borderWidth:1,borderStyle:"solid" }}><AiOutlineSearch size={20} className="m-2 rounded"/></div>
                             </Stack>
                             </Col>
                             <Col className="d-flex justify-content-end">                           
                             <Stack direction="horizontal">
-                               <Heading2 text={"🇹🇿"} className={"me-2"} /> <FaBell className="me-2"/> 
+                              
                                <div className="mx-3">
-                               <Heading2 fontSize={16} text={"John Chuma"}/>
-                               <Paragraph text={"johnvchuma@gmail.com"}/>
+                                  <Paragraph fontSize={16} text={"John Chuma"}/>
+                                  {/* <Paragraph text={"johnvchuma@gmail.com"}/> */}
                                </div>
-                               <div style={{ height:50,width:50}}>
-                                 <Image fluid roundedCircle src="https://hips.hearstapps.com/hmg-prod/images/how-to-shave-your-face-at-home-1648149510.png?crop=0.506xw:0.997xh;0.228xw,0.00318xh&resize=1200:*" />
+                               <div className="rounded-circle d-flex justify-content-center align-items-center" style={{ height:35,width:35,backgroundColor:"rgb(255, 222, 160)"}}>
+                                  <BsPersonFill color="rgb(143, 94, 5)"/>
                                </div>
-                               <AiFillSetting className="ms-3"/>
+                               <div className="btn border-0" onClick={()=>{
+                                    setShow(true)
+                                  }}>
+                                  <AiOutlineMenu size={28} color={mutedColor} className="ms-3"/>
+                               </div>
                             </Stack>
                             </Col>
                         </Row>
                     </Stack>
-                    <br/>
-
+                    {/* <hr/> */}
+                    <SizedBox/>
+                  
                     <Outlet/>
                 </Col>
             </Row>

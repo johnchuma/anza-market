@@ -5,27 +5,21 @@ import * as formik from 'formik';
 import * as yup from 'yup';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import CustomButton from '../../../widgets/button';
-import Heading from '../../../widgets/heading';
-import { addCategory, deleteBusinessCategory, getBusinessCategories } from '../../../controllers/category_controller';
-import { mutedBackground } from '../../../utils/colors';
-import { AiFillDelete } from 'react-icons/ai';
+
 import Heading2 from '../../../widgets/heading2';
+import toast from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
+import { addSector } from '../../../controllers/sector_controller';
 
 
 
-const AddCategory = ({ show, onHide }) => {
+const AddBusinessSector = ({ show, onHide }) => {
 
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
   const [deleting, setDeleting] = useState(false);
-
+  const navigate = useNavigate()
   
- 
-  useEffect(() => {
-    if(loading == false && deleting == false){
-        getBusinessCategories().then((value)=>setCategories(value.body))
-    }
-  }, [loading,deleting]);
   const { Formik } = formik;
   const schema = yup.object().shape({
     name: yup.string().required('Category name is required')
@@ -35,9 +29,11 @@ const AddCategory = ({ show, onHide }) => {
     const data = {...values };
    
     setLoading(true)
-    addCategory(data).then((status) => {
+    addSector(data).then((status) => {
       if (status === true) {
         setLoading(false)
+        toast.success("Added succesfully")
+        navigate(-1)
       }
       
     });
@@ -54,51 +50,12 @@ const AddCategory = ({ show, onHide }) => {
   return (
     <div>
        <Row>
-        <Col md={12}>
-        <Heading text={"product categories"}/>
-    <Card style={{ backgroundColor:"white"}} className="mt-3">
-        <Card.Body>
-        <Table className="table table-hover ">
-            <thead>
-                <th>ID</th>
-                <th>Category name</th>
-                <th>Created at</th>
-                <th>Action</th>
-              
-            </thead>
-            <tbody>
-                {categories.map((item,index)=>{
-                    return <tr>
-                    <td>#{index}</td>
-                    <td>{item.name}</td>
-                    <td>{item.createdAt}</td>
-                    <td>
-                    <div  onClick={()=>{
-                setDeleting(true)
-                deleteBusinessCategory(item.uuid).then((value)=>{
-                    setDeleting(false)
-
-                })
-            }} className='btn border-0 p-0'>
-            <AiFillDelete className='ms-2'/>
-                </div> 
-                    </td>
-    
-                   </tr>
-                })}
-               
-            </tbody>
-        </Table>
-        </Card.Body>
-        
-    </Card>
-        </Col>
-        
+     
         <Col md={12}>
 
           <Card className='mt-3'>
             <Card.Body>
-              <Heading2 text={"Create new category"}/>
+              <Heading2 text={"Create new business sector"}/>
             <Formik
             initialValues={{
               name: '',
@@ -113,9 +70,7 @@ const AddCategory = ({ show, onHide }) => {
         
                 <Row className='mt-3'>
                   <Col md={6} className='text-start' >
-                    
-                    
-                      <Form.Group>
+                         <Form.Group>
                               <Form.Control
                                 onChange={handleChange}
                                 name='name'
@@ -125,12 +80,9 @@ const AddCategory = ({ show, onHide }) => {
                               />
                               <Form.Control.Feedback type='invalid'>{errors.name}</Form.Control.Feedback>
                             </Form.Group>
-                          
-                    
-                   
                   </Col>
                   <Col>
-                  <CustomButton loading={loading} text={"Add category"} className={""}/>
+                  <CustomButton  loading={loading} text={"Add category"} className={"btn bg-danger"}/>
                   </Col>
                  
                 </Row>
@@ -151,4 +103,4 @@ const AddCategory = ({ show, onHide }) => {
   );
 };
 
-export default AddCategory;
+export default AddBusinessSector;

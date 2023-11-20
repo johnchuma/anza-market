@@ -2,143 +2,119 @@ import { Carousel, Col, Container, Form, Image, Row, Stack } from "react-bootstr
 import Heading2 from "../widgets/heading2";
 import SizedBox from "../widgets/sizedBox";
 import Heading from "../widgets/heading";
-import { mutedColor } from "../utils/colors";
+import { mutedColor, textColor } from "../utils/colors";
 import SmallText from "../widgets/small_text";
 import Paragraph from "../widgets/paragraph";
 import { FaArrowRight, FaStar } from "react-icons/fa";
+import { useEffect, useState } from "react";
+import { getFeaturedProducts, getTopRated, getTopSelling } from "../controllers/product_controller";
+import { useNavigate } from "react-router-dom";
+import ProductRating from "../widgets/product_rating";
+import ProductItem from "../widgets/product_item";
+// import FormatMoney from "../utils/format_money";
 
 
 
 const HomePage = () => {
+  const [featuredProducts, setFeaturedProducts] = useState([]);
+  const [topRatedProducts, setTopRatedProducts] = useState([]);
+  const [topSellingProducts, setTopSellingProducts] = useState([]);
+
+
+  const [selectedFirstCategory, setselectedFirstCategory] = useState("Featured");
+  const [selectedSecondCategory, setselectedSecondCategory] = useState("ALL");
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate()
+
   
+ useEffect(() => {
+  setLoading(true);
+  getTopSelling().then((data)=>{
+    setTopSellingProducts(data)
+    setLoading(false);
+
+  })
+    if(selectedFirstCategory == "Featured"){
+      getFeaturedProducts().then((data)=>{
+        setFeaturedProducts(data)
+        setLoading(false);
+  
+      })
+    }
+    else{
+      getTopRated().then((data)=>{
+        setTopRatedProducts(data)
+        setLoading(false);
+  
+      })
+    }
+    
+ }, [selectedFirstCategory]);
     return ( 
     <div>
   
             <div>
               <Container className="p-0" fluid>
               <Carousel>
-                <Carousel.Item >
-                  <Image src="images/ads/SY Web 1920 – 6.png" fluid/>
+              <Carousel.Item >
+                  <Image src="/images/ads/ad2.png" fluid/>
                 </Carousel.Item>
-                <Carousel.Item>
-                <Image src="images/ads/SY Web 1920 – 7.png" fluid/>
-
+              <Carousel.Item>
+                <Image src="/images/ads/ad1.png" fluid/>
                 </Carousel.Item>
+               
               </Carousel>
-              </Container>
+            </Container>
              
             </div>
-            <SizedBox height={100}/>
-
+            <SizedBox height={70}/>
 
      <Container>
       <Stack direction="horizontal" className="d-flex justify-content-center">
-        <Heading text={"Featured"}/>
+        <Heading onClick={()=>{
+            setselectedFirstCategory("Featured")
+        }} className={"btn border-0 p-0"} color={selectedFirstCategory == "Featured"?textColor:"#afafaf"}  text={"Featured"}/>
         <SizedBox width={30} height={0}/>
-        <Heading color={mutedColor}  text={"On sale"}/>
-        <SizedBox width={30} height={0}/>
-        <Heading  color={mutedColor} text={"Top rated"}/>
+        <Heading onClick={()=>{
+            setselectedFirstCategory("Top rated")
+        }} className={"btn border-0 p-0"}  color={selectedFirstCategory == "Top rated"?textColor:"#afafaf"}  text={"Top rated"}/>
 
       </Stack>
-
       <SizedBox />
-      
      <Row>
-            {
-      ["https://d-themes.com/react_asset_api/molla/uploads/product_1_2_300x300_d265cc4cd6.jpg",
-      "https://d-themes.com/react_asset_api/molla/uploads/product_2_2_300x300_798eabaee1.jpg",
-      "https://d-themes.com/react_asset_api/molla/uploads/product_3_2_300x300_7ef429113e.jpg",
-      "https://d-themes.com/react_asset_api/molla/uploads/product_4_2_300x300_ec63a5f054.jpg",
-      "https://d-themes.com/react_asset_api/molla/uploads/product_1_2_300x300_d265cc4cd6.jpg",
-      "https://d-themes.com/react_asset_api/molla/uploads/product_2_2_300x300_798eabaee1.jpg",
-      "https://d-themes.com/react_asset_api/molla/uploads/product_3_2_300x300_7ef429113e.jpg",
-      "https://d-themes.com/react_asset_api/molla/uploads/product_4_2_300x300_ec63a5f054.jpg"
-      ].map((item)=>
-      <Col  className="text-center  mb-4"  md={3}>
-      <div>
-        <Image src={item} fluid/>
-      </div>
-      <SmallText text={"Furniture"}/>
-      <Paragraph text={"2-Seaters"} fontSize={18} />
-      <Paragraph text={"$250 - $300"} fontSize={18} />
-      <Stack direction="horizontal" className="d-flex justify-content-center">
-        <FaStar size={12} color="orange"/>
-        <FaStar size={12} color="orange"/>
-        <FaStar size={12} color="orange"/>
-        <FaStar size={12} color="orange"/>
-        <SmallText text={" (2 reviews)"} />
-      </Stack>
-
+            { selectedFirstCategory == "Top rated" &&
+      topRatedProducts.map((item)=>
+      <Col  md={3}>
+         <ProductItem product={item}/>
+      </Col>
+      )
+          }
+            { selectedFirstCategory == "Featured" &&
+      featuredProducts.map((item)=>
+      <Col  md={3}>
+         <ProductItem product={item}/>
       </Col>
       )
           }
      </Row>
      </Container>
 
-   
-    
-    
-     <SizedBox height={100}/>
-     {/* <div>
-     <Carousel>
-     <Carousel.Item>
-                <Image src="images/backgrounds/bg-large.jpg" fluid/>
-
-                </Carousel.Item>
-                <Carousel.Item >
-                  <Image src="images/backgrounds/bg-large.jpg" fluid/>
-                </Carousel.Item>
-               
-              </Carousel>
-            </div> */}
-     <SizedBox height={100}/>
+     <SizedBox height={50}/>
      
-     <Container>
+     <Container >
      <Heading className={"text-center"} text={"Top selling products"}/>
           <SizedBox/>
-      <Stack direction="horizontal" className="d-flex justify-content-center">
-        <Paragraph text={"ALL"}/>
-        <SizedBox width={30} height={0}/>
-        <Paragraph color={mutedColor}  text={"FURNITURE"}/>
-        <SizedBox width={30} height={0}/>
-        <Paragraph color={mutedColor}  text={"DECORATION"}/>
-        <SizedBox width={30} height={0}/>
-        <Paragraph color={mutedColor}  text={"LIGHTING"}/>
-      </Stack>
+          <Paragraph color={mutedColor} className={"text-center"}  text={"EXPLORE TOP SELLING PRODUCTS FROM VARIOUS SELLERS"}/>
+      
 
       <SizedBox />
       <SizedBox/>
       
      <Row>
             {
-      ["https://d-themes.com/react_asset_api/molla/uploads/product_1_2_300x300_d265cc4cd6.jpg",
-      "https://d-themes.com/react_asset_api/molla/uploads/product_2_2_300x300_798eabaee1.jpg",
-      "https://d-themes.com/react_asset_api/molla/uploads/product_3_2_300x300_7ef429113e.jpg",
-      "https://d-themes.com/react_asset_api/molla/uploads/product_4_2_300x300_ec63a5f054.jpg",
-      "https://d-themes.com/react_asset_api/molla/uploads/product_1_2_300x300_d265cc4cd6.jpg",
-      "https://d-themes.com/react_asset_api/molla/uploads/product_2_2_300x300_798eabaee1.jpg",
-      "https://d-themes.com/react_asset_api/molla/uploads/product_3_2_300x300_7ef429113e.jpg",
-      "https://d-themes.com/react_asset_api/molla/uploads/product_4_2_300x300_ec63a5f054.jpg",
-      "https://d-themes.com/react_asset_api/molla/uploads/product_4_2_300x300_ec63a5f054.jpg",
-      "https://d-themes.com/react_asset_api/molla/uploads/product_1_2_300x300_d265cc4cd6.jpg",
-      "https://d-themes.com/react_asset_api/molla/uploads/product_2_2_300x300_798eabaee1.jpg",
-      "https://d-themes.com/react_asset_api/molla/uploads/product_3_2_300x300_7ef429113e.jpg",
-      ].map((item)=>
-      <Col  className="text-center  mb-4"  md={2}>
-      <div>
-        <Image src={item} fluid/>
-      </div>
-      <SmallText text={"Furniture"}/>
-      <Paragraph text={"2-Seaters"} fontSize={18} />
-      <Paragraph text={"$250 - $300"} fontSize={18} />
-      <Stack direction="horizontal" className="d-flex justify-content-center">
-        <FaStar size={12} color="orange"/>
-        <FaStar size={12} color="orange"/>
-        <FaStar size={12} color="orange"/>
-        <FaStar size={12} color="orange"/>
-        <SmallText text={" (2 reviews)"} />
-      </Stack>
-
+      topSellingProducts.map((item)=>
+      <Col md={2}>
+         <ProductItem height={140} product={item}/>
       </Col>
       )
           }
@@ -153,16 +129,28 @@ const HomePage = () => {
     <SizedBox/>
     <Row>
       <Col md={{ offset:3,span:6 }}>
-
-        <Stack direction="horizontal" className="bg-white">
-        <Form.Control placeholder="Enter your email address"/>
-         <SizedBox width={10}/>
-         <Heading2 text={"Subscribe"} fontSize={15}/>
+<Container>
+<Row>
+          <Col md="8" className="mb-1">
+          <Form.Control className="rounded-0" placeholder="Enter your email address"/>
+          </Col>
+          <Col lg={4}>
+          
+          <div className="px-3 py-2  rounded-0" style={{ backgroundColor:"white" }}>
+            
+            <Stack className="d-flex justify-content-center" direction="horizontal">
+            <Heading2 text={"Subscribe"} fontSize={15}/>
          <SizedBox width={10}/>
          <FaArrowRight size={10}/>
-         <SizedBox width={30}/>
+            </Stack>
+         
+         </div>
+          </Col>
+        </Row>
+</Container>
+      
+       
 
-        </Stack>
       </Col>
     </Row>
     </div>

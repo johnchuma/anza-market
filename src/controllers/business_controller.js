@@ -22,19 +22,19 @@ export const addBusiness = async (data) => {
     }
   };
   
-  export const updateProduct = async (data,uuid) => {
+  export const getBusinessApplications = async () => {
+    try { 
+        const user = getUser();
+      const response = await axios.get(`${server_url}/business/applications/`);
+     return response.data.body
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  export const updateBusiness = async (data,uuid) => {
     try {
-      const formData = new FormData();
-      formData.append('file', data.file); 
-      delete data.file;
-      Object.keys(data).forEach((key) => {
-        formData.append(key, data[key]);
-      });
-      const response = await axios.patch(`${server_url}/product/${uuid}`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data', 
-        },
-      });
+      
+      const response = await axios.patch(`${server_url}/business/${uuid}`,data);
      return response.data.status
     } catch (error) {
       console.log(error);
